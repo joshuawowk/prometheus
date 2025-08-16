@@ -5,7 +5,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - /home/jwowk/repos/prometheus/prometheus/:/etc/prometheus/
       - /docker/prometheus/prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -20,12 +20,14 @@ services:
       - cadvisor
     networks:
       - prom_net
-    deploy:
-      placement:
-        constraints:
-          - node.role==manager
-      restart_policy:
-        condition: on-failure
+    container_name: prometheus
+    restart: unless-stopped
+    # deploy:
+    #   placement:
+    #     constraints:
+    #       - node.role==manager
+    #   restart_policy:
+    #     condition: on-failure
 
   # node-exporter:
   #   image: quay.io/prometheus/node-exporter:latest
@@ -52,18 +54,20 @@ services:
     ports:
       - 9092:9093
     volumes:
-      - "./alertmanager/:/etc/alertmanager/"
+      - "/home/jwowk/repos/prometheus/alertmanager/:/etc/alertmanager/"
     networks:
       - prom_net
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
-    deploy:
-      placement:
-        constraints:
-           - node.role==manager
-      restart_policy:
-        condition: on-failure    
+    container_name: alertmanager
+    restart: unless-stopped
+    # deploy:
+    #   placement:
+    #     constraints:
+    #        - node.role==manager
+    #   restart_policy:
+    #     condition: on-failure    
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
@@ -76,13 +80,17 @@ services:
       - 9093:8080
     networks:
       - prom_net
-    deploy:
-      mode: global
-      restart_policy:
-          condition: on-failure
+    container_name: cadvisor
+    restart: unless-stopped
+    # deploy:
+    #   mode: global
+    #   restart_policy:
+    #       condition: on-failure
 
 networks:
   prom_net:
+    driver: bridge
+    name: prom_net
 
 
   # grafana:
