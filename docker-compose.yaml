@@ -6,7 +6,7 @@ services:
     image: prom/prometheus:latest
     volumes:
       - /home/jwowk/repos/prometheus/prometheus/:/etc/prometheus/
-      - /docker/prometheus/prometheus_data:/prometheus
+      - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -92,6 +92,8 @@ networks:
     driver: bridge
     name: prom_net
 
+volumes:
+    prometheus_data:
 
   # grafana:
   #   image: grafana/grafana
