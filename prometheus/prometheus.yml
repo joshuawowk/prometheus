@@ -42,6 +42,7 @@ scrape_configs:
     scrape_interval: 15s  
     static_configs:
       - targets: ['192.168.0.160:9100']
+      - targets: ['192.168.0.160:9400']
 
   - job_name: 'laptop'
     scrape_interval: 15s  
